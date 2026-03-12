@@ -65,10 +65,8 @@ def fetch_jakarta_aqi(api_key):
         print("❌ Terjadi kesalahan koneksi:", e)
 
 if __name__ == "__main__":
-    # API Key WAJIB menggunakan tanda kutip ("...")
+    # API Key milikmu
     MY_IQAIR_API_KEY = "b7494306-68a0-467f-992b-8831c664fc42" 
     
-    if MY_IQAIR_API_KEY == "b7494306-68a0-467f-992b-8831c664fc42":
-        print("⚠️ PERHATIAN: Tolong masukkan API Key milikmu pada variabel MY_IQAIR_API_KEY di dalam script ini terlebih dahulu.")
-    else:
-        fetch_jakarta_aqi(MY_IQAIR_API_KEY)
+    # Langsung jalankan fungsinya tanpa perlu pengecekan if lagi
+    fetch_jakarta_aqi(MY_IQAIR_API_KEY)
