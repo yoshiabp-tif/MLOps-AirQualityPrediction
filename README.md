@@ -160,6 +160,18 @@ Tahapan berikutnya akan mencakup:
 * Implementasi pipeline machine learning
 * Deployment model sebagai API
 
+
+Progress LK-4:
+1. Data Ingestion
+Skrip ini bertugas mengambil data secara real-time dari IQAir API dan menyimpannya dalam format mentah .json dengan timestamp (simulasi periodik).
+`python src/ingest_data.py`
+Output data mentah akan tersimpan di dalam folder data/raw/.
+
+2. Data Preprocessing
+Skrip ini bertugas membaca seluruh file JSON di folder raw, mengekstrak fitur yang relevan (AQI, Suhu, Kelembapan), menangani duplikasi/missing values, dan merangkumnya menjadi dataset siap pakai.
+`python src/preprocess.py`
+Output data bersih akan tersimpan dalam format CSV di data/interim/jakarta_aqi_cleaned.csv.
+
 ---
 
 ### Nama: Yoshia Benedict Parasian
