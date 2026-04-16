@@ -145,22 +145,6 @@ Pendekatan ini membantu menjaga stabilitas kode dan memudahkan kolaborasi dalam 
 
 # Status Proyek
 
-Saat ini proyek masih berada pada tahap **inisiasi dan setup infrastruktur MLOps** yang mencakup:
-
-* Setup repositori GitHub
-* Konfigurasi GitHub Codespaces
-* Penentuan struktur direktori proyek
-* Dokumentasi awal proyek
-
-Tahapan berikutnya akan mencakup:
-
-* Data ingestion dari API kualitas udara
-* Eksplorasi data (EDA)
-* Pelatihan model prediksi AQI
-* Implementasi pipeline machine learning
-* Deployment model sebagai API
-
-
 Progress LK-4:
 1. Data Ingestion
 Skrip ini bertugas mengambil data secara real-time dari IQAir API dan menyimpannya dalam format mentah .json dengan timestamp (simulasi periodik).
@@ -171,6 +155,18 @@ Output data mentah akan tersimpan di dalam folder data/raw/.
 Skrip ini bertugas membaca seluruh file JSON di folder raw, mengekstrak fitur yang relevan (AQI, Suhu, Kelembapan), menangani duplikasi/missing values, dan merangkumnya menjadi dataset siap pakai.
 `python src/preprocess.py`
 Output data bersih akan tersimpan dalam format CSV di data/interim/jakarta_aqi_cleaned.csv.
+
+3. Manajemen Versi Data (DVC)
+Proyek ini menggunakan **DVC (Data Version Control)** untuk melacak perubahan dataset kualitas udara tanpa membebani repositori Git. 
+Penyimpanan file data biner / besar diarahkan ke Remote Storage terpisah, sementara Git hanya menyimpan file penunjuk metadatanya (`.dvc`).
+
+**Alur Penambahan Versi Data Baru (Continual Learning):**
+1. Tarik data terbaru menggunakan `python src/ingest_data.py`.
+2. Proses data menggunakan `python src/preprocess.py`.
+3. Lacak perubahan data dengan DVC: `dvc add data/raw data/interim`.
+4. Simpan metadata ke Git: `git add . && git commit -m "update data"`.
+5. Dorong data fisik ke remote storage: `dvc push`.
+6. Untuk melihat silsilah perubahan, gunakan perintah: `dvc diff`.
 
 ---
 
