@@ -145,7 +145,7 @@ Pendekatan ini membantu menjaga stabilitas kode dan memudahkan kolaborasi dalam 
 
 # Status Proyek
 
-Progress LK-4:
+Progress LK-5:
 1. Data Ingestion
 Skrip ini bertugas mengambil data secara real-time dari IQAir API dan menyimpannya dalam format mentah .json dengan timestamp (simulasi periodik).
 `python src/ingest_data.py`
