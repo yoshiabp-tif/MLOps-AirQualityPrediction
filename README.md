@@ -145,7 +145,6 @@ Pendekatan ini membantu menjaga stabilitas kode dan memudahkan kolaborasi dalam 
 
 # Status Proyek
 
-Progress LK-5:
 1. Data Ingestion
 Skrip ini bertugas mengambil data secara real-time dari IQAir API dan menyimpannya dalam format mentah .json dengan timestamp (simulasi periodik).
 `python src/ingest_data.py`
@@ -167,6 +166,11 @@ Penyimpanan file data biner / besar diarahkan ke Remote Storage terpisah, sement
 4. Simpan metadata ke Git: `git add . && git commit -m "update data"`.
 5. Dorong data fisik ke remote storage: `dvc push`.
 6. Untuk melihat silsilah perubahan, gunakan perintah: `dvc diff`.
+
+Progress LK-7:
+
+Model aktif untuk inferensi:
+Saat ini, versi model yang aktif digunakan pada tahap Production adalah AQI_Jakarta_Model Version 1. Model ini dipilih karena berdasarkan evaluasi MLflow, variasi ini memberikan tingkat error yang setara dengan model yang lebih kompleks. Oleh karena itu, pemilihan didasarkan pada prinsip parsimony (kesederhanaan) untuk mencegah overfitting dan menghemat resource komputasi saat melayani inferensi.
 
 ---
 
