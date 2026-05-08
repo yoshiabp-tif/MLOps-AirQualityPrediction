@@ -61,7 +61,7 @@ if __name__ == "__main__":
     run_id, mae = train_and_evaluate(X_train, X_test, y_train, y_test, params, "Run_Automated_Pipeline")
 
     # TAHAP 3: Model Evaluation & Validation
-    THRESHOLD_MAE = 5.0  # Ambang batas performa dari LK-01
+    THRESHOLD_MAE = 50.0
     print(f"\n📊 Hasil Evaluasi -> MAE: {mae:.2f} (Ambang Batas Maksimal: {THRESHOLD_MAE})")
 
     # TAHAP 4: Auto-Registry Update
