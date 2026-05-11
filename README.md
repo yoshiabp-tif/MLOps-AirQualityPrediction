@@ -120,26 +120,6 @@ Untuk melakukan eksplorasi data atau eksperimen model:
 1. Buka folder **notebooks/**
 2. Jalankan file **.ipynb** menggunakan Jupyter Notebook yang tersedia di Codespaces.
 
----
-
-# Branching Strategy
-
-Repositori ini menggunakan **GitHub Flow** sebagai strategi pengelolaan kode.
-
-Alur kerja pengembangan:
-
-1. Branch utama: `main`
-2. Setiap fitur atau eksperimen dibuat dalam branch terpisah, misalnya:
-
-```
-feat/initial-eda
-feat/model-training
-feat/api-development
-```
-
-3. Setelah fitur selesai dan divalidasi, branch akan digabungkan ke branch `main` melalui **Pull Request**.
-
-Pendekatan ini membantu menjaga stabilitas kode dan memudahkan kolaborasi dalam pengembangan proyek.
 
 ---
 
