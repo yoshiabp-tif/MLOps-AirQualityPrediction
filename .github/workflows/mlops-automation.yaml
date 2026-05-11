@@ -1,21 +1,39 @@
 name: End-to-End MLOps Pipeline
 
-# Konfigurasi Pemicu (Trigger)
 on:
   push:
-    branches:
-      - main
+    branches: [ main ]
   pull_request:
-    branches:
-      - main
+    branches: [ main ]
 
 jobs:
-  build-test-and-train:
+  # JOB 1: TESTING
+  testing:
     runs-on: ubuntu-latest
-
     steps:
     - name: Checkout Repository
-      uses: actions/checkout@v3
+      uses: actions/checkout@v4
+
+    - name: Setup Python 3.10
+      uses: actions/setup-python@v4
+      with:
+        python-version: '3.10'
+
+    - name: Install Dependencies
+      run: pip install pytest
+
+    - name: Tahap 1 - Automated Testing (Unit Test)
+      run: |
+        echo "Menjalankan verifikasi integritas kode..."
+        pytest tests/
+
+  # JOB 2: TRAINING & REGISTRY
+  training_and_registry:
+    runs-on: ubuntu-latest
+    needs: testing  # Memastikan training hanya jalan JIKA testing sukses
+    steps:
+    - name: Checkout Repository
+      uses: actions/checkout@v4
 
     - name: Setup Python 3.10
       uses: actions/setup-python@v4
@@ -25,15 +43,14 @@ jobs:
     - name: Install Dependencies
       run: |
         python -m pip install --upgrade pip
-        pip install pytest mlflow xgboost pandas scikit-learn dvc
-        if [ -f requirements.txt ]; then pip install -r requirements.txt; fi
-
-    - name: Tahap 1 - Automated Testing (Unit Test)
-      run: |
-        echo "Menjalankan verifikasi integritas kode..."
-        pytest tests/
+        pip install mlflow xgboost pandas scikit-learn dvc
 
     - name: Tahap 2, 3 & 4 - Automated Training, Evaluation, & Registry
+      env:
+        # PENERAPAN SECRETS MANAGEMENT (BOBOT 15%)
+        MLFLOW_TRACKING_URI: ${{ secrets.MLFLOW_TRACKING_URI }}
+        AWS_ACCESS_KEY_ID: ${{ secrets.AWS_ACCESS_KEY_ID }}
+        AWS_SECRET_ACCESS_KEY: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
       run: |
         echo "Menjalankan skrip pelatihan dan validasi metrik otomatis..."
         python src/modeling/train.py
