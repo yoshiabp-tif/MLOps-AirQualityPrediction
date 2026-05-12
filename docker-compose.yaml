@@ -1,0 +1,54 @@
+services:
+  # Layanan 1: Database Metadata
+  db:
+    image: postgres:15
+    container_name: aqi_postgres
+    environment:
+      POSTGRES_USER: admin
+      POSTGRES_PASSWORD: password123
+      POSTGRES_DB: mlflow_db
+    volumes:
+      - pg-data:/var/lib/postgresql/data
+    networks:
+      - aqi-network
+
+  # Layanan 2: MLflow Tracking Server
+  mlflow-server:
+    image: python:3.10-slim
+    container_name: aqi_mlflow
+
+    command: >
+      bash -c "pip install mlflow==2.10.2 psycopg2-binary &&
+      mlflow server --backend-store-uri postgresql://admin:password123@db:5432/mlflow_db --default-artifact-root mlflow-artifacts:/ --host 0.0.0.0 --port 5000"
+    ports:
+      - "5000:5000"
+    depends_on:
+      - db
+    volumes:
+      - mlflow-data:/mlflow/artifacts
+    networks:
+      - aqi-network
+
+  # Layanan 3: API Inferensi Model XGBoost
+  api-service:
+    build: .  # Membangun image dari Dockerfile di root direktori
+    container_name: aqi_inference_api
+    ports:
+      - "8080:8080"
+    environment:
+      # PENTING: Menggunakan "Service Discovery", memanggil nama layanan (mlflow-server), bukan IP
+      - MLFLOW_TRACKING_URI=http://mlflow-server:5000
+    depends_on:
+      - mlflow-server
+    networks:
+      - aqi-network
+
+# Konfigurasi Jaringan (Custom Bridge Network)
+networks:
+  aqi-network:
+    driver: bridge
+
+# Konfigurasi Persistensi Data (Volume)
+volumes:
+  pg-data:
+  mlflow-data:
