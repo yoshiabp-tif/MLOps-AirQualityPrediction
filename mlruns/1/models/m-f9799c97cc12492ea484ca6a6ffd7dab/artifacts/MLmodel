@@ -1,0 +1,22 @@
+artifact_path: /workspaces/MLOps-AirQualityPrediction/mlruns/1/models/m-f9799c97cc12492ea484ca6a6ffd7dab/artifacts
+flavors:
+  python_function:
+    data: model.ubj
+    env:
+      conda: conda.yaml
+      virtualenv: python_env.yaml
+    loader_module: mlflow.xgboost
+    python_version: 3.12.1
+  xgboost:
+    code: null
+    data: model.ubj
+    model_class: xgboost.sklearn.XGBRegressor
+    model_format: ubj
+    xgb_version: 3.2.0
+mlflow_version: 3.11.1
+model_id: m-f9799c97cc12492ea484ca6a6ffd7dab
+model_size_bytes: 139133
+model_uuid: m-f9799c97cc12492ea484ca6a6ffd7dab
+prompts: null
+run_id: e60cd8b8e37f42c1a612b9d5b4965d3d
+utc_time_created: '2026-04-23 12:28:55.579933'
