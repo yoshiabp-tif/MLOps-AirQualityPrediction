@@ -147,15 +147,11 @@ Penyimpanan file data biner / besar diarahkan ke Remote Storage terpisah, sement
 5. Dorong data fisik ke remote storage: `dvc push`.
 6. Untuk melihat silsilah perubahan, gunakan perintah: `dvc diff`.
 
-Progress LK-7:
-
-Model aktif untuk inferensi:
+Progress LK-7: Model aktif untuk inferensi
 
 Saat ini, versi model yang aktif digunakan pada tahap Production adalah AQI_Jakarta_Model Version 1. Model ini dipilih karena berdasarkan evaluasi MLflow, variasi ini memberikan tingkat error yang setara dengan model yang lebih kompleks. Oleh karena itu, pemilihan didasarkan pada prinsip parsimony (kesederhanaan) untuk mencegah overfitting dan menghemat resource komputasi saat melayani inferensi.
 
-Progress LK-9:
-
-Menjalankan Sistem Terintegrasi (Orkestrasi)
+Progress LK-9: Menjalankan Sistem Terintegrasi (Orkestrasi)
 
 Proyek ini menggunakan Docker Compose untuk mengorkestrasi Database, MLflow Server, dan API Inferensi secara bersamaan di dalam satu *bridge network*.
 
