@@ -10,7 +10,7 @@ Proyek ini merupakan inisiasi pengembangan sistem **Machine Learning Operations 
 
 Dalam implementasinya, sistem akan menggunakan pendekatan **time-series machine learning** dengan model seperti **XGBoost** untuk memprediksi kondisi kualitas udara **1 jam ke depan**. Selain itu, proyek ini juga dirancang dengan konsep **continuous training**, sehingga model dapat diperbarui secara otomatis ketika terjadi perubahan distribusi data (data drift).
 
-Sumber data kualitas udara akan diperoleh dari API penyedia data terbuka seperti OpenAQ atau sumber lain yang menyediakan data sensor kualitas udara secara berkala.
+Sumber data kualitas udara akan diperoleh dari API penyedia data terbuka yaitu IQAir sumber: https://www.iqair.com/air-quality-monitors/api.
 
 Proyek ini dikembangkan sebagai bagian dari tugas mata kuliah **Machine Learning Operations (MLOps)** dengan tujuan membangun pipeline machine learning yang siap digunakan dalam lingkungan produksi.
 
