@@ -2,6 +2,7 @@ import requests
 import json
 import os
 from datetime import datetime
+from dotenv import load_dotenv
 
 # =====================================================================
 # SCRIPT UNTUK BUKTI PENGAMBILAN DATA (LK-03)
@@ -65,8 +66,14 @@ def fetch_jakarta_aqi(api_key):
         print("❌ Terjadi kesalahan koneksi:", e)
 
 if __name__ == "__main__":
-    # API Key milikmu
-    MY_IQAIR_API_KEY = "b7494306-68a0-467f-992b-8831c664fc42" 
-    
-    # Langsung jalankan fungsinya tanpa perlu pengecekan if lagi
-    fetch_jakarta_aqi(MY_IQAIR_API_KEY)
+    # 1. Muat variabel dari file .env ke dalam environment sistem
+    load_dotenv()
+
+    # 2. Panggil API Key secara aman menggunakan nama variabelnya
+    MY_IQAIR_API_KEY = os.getenv("IQAIR_API_KEY")
+
+    # 3. Jalankan fungsi dengan sedikit pengaman tambahan
+    if MY_IQAIR_API_KEY is None:
+        print("❌ Error: API Key tidak ditemukan! Pastikan file .env sudah diatur.")
+    else:
+        fetch_jakarta_aqi(MY_IQAIR_API_KEY)
