@@ -1,4 +1,4 @@
-# Sistem Prediksi Kualitas Udara Jakarta (AQI)
+# Sistem Prediksi Kualitas Udara di Jakarta (AQI)
 
 <a target="_blank" href="https://cookiecutter-data-science.drivendata.org/">
     <img src="https://img.shields.io/badge/CCDS-Project%20template-328F97?logo=cookiecutter" />
@@ -8,87 +8,114 @@
 
 Proyek ini merupakan inisiasi pengembangan sistem **Machine Learning Operations (MLOps)** untuk memonitor dan memprediksi kualitas udara di **Kota Jakarta**. Sistem ini dirancang untuk memanfaatkan data kualitas udara yang terus diperbarui secara berkala dan menghasilkan prediksi **Air Quality Index (AQI)** untuk periode waktu mendatang.
 
-Dalam implementasinya, sistem akan menggunakan pendekatan **time-series machine learning** dengan model seperti **XGBoost** untuk memprediksi kondisi kualitas udara **1 jam ke depan**. Selain itu, proyek ini juga dirancang dengan konsep **continuous training**, sehingga model dapat diperbarui secara otomatis ketika terjadi perubahan distribusi data (data drift).
+Dalam implementasinya, sistem akan menggunakan pendekatan **time-series machine learning** dengan model seperti **XGBoost** untuk memprediksi kondisi kualitas udara **1 jam ke depan** berdasarkan data suhu dan kelembapan saat ini. Selain itu, proyek ini juga dirancang dengan konsep **continuous training**, sehingga model dapat diperbarui secara otomatis ketika terjadi perubahan distribusi data (data drift).
 
-Sumber data kualitas udara akan diperoleh dari API penyedia data terbuka yaitu IQAir sumber: https://www.iqair.com/air-quality-monitors/api.
+Sumber data kualitas udara diperoleh secara *real-time* dari API penyedia data terbuka yaitu IQAir sumber: https://www.iqair.com/air-quality-monitors/api.
 
-Proyek ini dikembangkan sebagai bagian dari tugas mata kuliah **Machine Learning Operations (MLOps)** dengan tujuan membangun pipeline machine learning yang siap digunakan dalam lingkungan produksi.
+Proyek ini dikembangkan sebagai bagian dari tugas mata kuliah **Machine Learning Operations (MLOps)** dengan tujuan membangun *pipeline machine learning* *end-to-end* yang siap digunakan dalam lingkungan produksi.
 
 ---
 
-# Tujuan Proyek
+## Tujuan Proyek
 
 Tujuan utama dari proyek ini adalah:
 
 1. Membangun sistem monitoring kualitas udara berbasis data yang diperbarui secara berkala.
 2. Mengembangkan model machine learning untuk memprediksi nilai **AQI (Air Quality Index)** satu jam ke depan.
-3. Mengimplementasikan pipeline MLOps yang mencakup pengambilan data, pemrosesan data, pelatihan model, hingga deployment model.
+3. Mengimplementasikan *pipeline* MLOps yang mencakup pengambilan data otomatis, pemrosesan data, pelatihan model (*tracking*), pengujian otomatis (CI/CD), hingga *deployment* model via REST API.
 4. Menerapkan konsep **continuous training** agar model tetap relevan terhadap perubahan data lingkungan.
 
 ---
 
-# Teknologi yang Digunakan
+## Teknologi yang Digunakan
 
-Beberapa teknologi yang akan digunakan dalam proyek ini antara lain:
+Beberapa teknologi inti yang digunakan dalam proyek ini antara lain:
 
-* Python
-* XGBoost
-* Jupyter Notebook
-* GitHub
-* GitHub Codespaces
-* Cookiecutter Data Science Template
-* MkDocs (dokumentasi proyek)
+* **Bahasa & Algoritma:** Python, XGBoost
+* **Manajemen Data:** DVC (Data Version Control)
+* **Pelacakan Eksperimen:** MLflow (Tracking & Model Registry)
+* **Pengujian & CI/CD:** Pytest, GitHub Actions
+* **Infrastruktur & Orkestrasi:** Docker Compose, PostgreSQL
+* **Lingkungan Pengembangan:** GitHub Codespaces, Cookiecutter Data Science Template
 
 ---
 
-# Struktur Direktori Proyek
+## Struktur Direktori Proyek
 
 Proyek ini menggunakan struktur standar **Cookiecutter Data Science** untuk menjaga organisasi kode tetap rapi dan mudah dikembangkan.
 
-```
-├── LICENSE            <- Lisensi proyek (MIT)
-├── Makefile           <- Perintah otomatis untuk menjalankan pipeline tertentu
-├── README.md          <- Dokumentasi utama proyek
-│
-├── data
-│   ├── external       <- Data dari sumber pihak ketiga (API / dataset eksternal)
-│   ├── interim        <- Data hasil transformasi sementara
-│   ├── processed      <- Dataset final yang siap digunakan untuk modeling
-│   └── raw            <- Data mentah hasil pengambilan dari sumber data
-│
-├── docs               <- Dokumentasi proyek menggunakan MkDocs
-│
-├── models             <- Model machine learning yang telah dilatih
-│
-├── notebooks          <- Notebook untuk eksplorasi data dan eksperimen model
-│
-├── references         <- Dokumentasi tambahan seperti data dictionary
-│
-├── reports            <- Laporan analisis atau hasil eksperimen
-│   └── figures        <- Visualisasi dan grafik hasil analisis
-│
-├── requirements.txt   <- Daftar dependency Python
-│
-├── src                <- Source code utama proyek
-│   │
-│   ├── config.py      <- Konfigurasi proyek
-│   ├── dataset.py     <- Script untuk mengambil atau memuat dataset
-│   ├── features.py    <- Feature engineering
-│   │
+```text
+├── .dvc                   <- Konfigurasi internal Data Version Control (DVC)
+│   ├── .gitignore
+│   └── config
+├── .github/workflows      <- Konfigurasi pipeline CI/CD (GitHub Actions)
+│   └── mlops-automation.yaml
+├── .vscode                <- Pengaturan environment editor
+│   └── settings.json
+├── data                   <- Folder utama penyimpanan data
+│   ├── external           <- Data dari sumber pihak ketiga
+│   ├── processed          <- Dataset final siap pakai
+│   ├── .gitignore
+│   ├── interim.dvc        <- Tracker DVC untuk data sementara
+│   └── raw.dvc            <- Tracker DVC untuk data mentah
+├── docs                   <- Dokumentasi proyek (MkDocs)
+│   ├── docs/getting-started.md
+│   ├── docs/index.md
+│   ├── README.md
+│   └── mkdocs.yml
+├── mlruns/1/models        <- Artefak model & eksperimen yang direkam MLflow
+│   ├── m-2c8a54c.../artifacts
+│   │   ├── MLmodel
+│   │   ├── conda.yaml
+│   │   ├── model.ubj      <- Model tersimpan dalam format Universal Binary JSON
+│   │   ├── python_env.yaml
+│   │   ├── registered_model_meta
+│   │   └── requirements.txt
+│   ├── m-c0878c5.../artifacts
+│   └── m-f9799c9.../artifacts
+├── models                 <- Folder alternatif model machine learning
+├── notebooks              <- Jupyter Notebook untuk eksperimen awal
+│   └── 01_initial_eda.ipynb
+├── references             <- Referensi tambahan / kamus data
+├── reports                <- Laporan analisis & visualisasi
+│   └── figures
+├── src                    <- Source code utama proyek
 │   ├── modeling
-│   │   ├── train.py   <- Script pelatihan model
-│   │   └── predict.py <- Script untuk melakukan prediksi
-│   │
-│   └── plots.py       <- Visualisasi data
+│   │   ├── __init__.py
+│   │   ├── predict.py     <- Skrip inferensi model
+│   │   └── train.py       <- Skrip pelatihan model
+│   ├── __init__.py
+│   ├── config.py          <- Konfigurasi variabel proyek
+│   ├── dataset.py         <- Skrip pemuatan data
+│   ├── features.py        <- Skrip ekstraksi fitur
+│   ├── ingest_data.py     <- Skrip pengambilan data dari API
+│   ├── plots.py           <- Skrip plotting grafik
+│   └── preprocess.py      <- Skrip pembersihan data
+├── tests                  <- Skrip pengujian otomatis (pytest)
+│   └── test_data.py
+│
+├── .dvcignore             <- Daftar file yang tidak dilacak oleh DVC
+├── .gitignore             <- Daftar file yang tidak dilacak oleh Git (termasuk .env)
+├── Dockerfile             <- Konfigurasi build image Docker
+├── LICENSE                <- Lisensi proyek (MIT)
+├── Makefile               <- Perintah shortcut otomatis
+├── README.md              <- Dokumentasi utama proyek
+├── docker-compose.yaml    <- File orkestrasi Docker multi-container
+├── mlflow.db              <- Database lokal SQLite untuk Tracking MLflow
+├── model_metadata.yaml.dvc<- Tracker DVC untuk metadata model
+├── pyproject.toml         <- Konfigurasi metadata proyek Python
+├── requirements.txt       <- Daftar dependensi/library Python
+├── test_inference.py      <- Skrip manual pengujian inferensi
+└── test_iqair_api.py      <- Skrip manual pengujian koneksi API IQAir
 ```
 
-Struktur ini membantu memastikan bahwa seluruh proses pengembangan data science dapat dilakukan secara **terstruktur, reproducible, dan scalable**.
+Struktur ini membantu memastikan bahwa seluruh proses pengembangan *data science* dapat dilakukan secara **terstruktur, reproducible, dan scalable**.
 
 ---
 
-# Cara Menjalankan Proyek Menggunakan GitHub Codespaces
+## Cara Menjalankan Proyek Menggunakan GitHub Codespaces
 
-Proyek ini dikembangkan menggunakan **GitHub Codespaces** untuk memastikan lingkungan pengembangan yang konsisten dan reproducible.
+Proyek ini dikembangkan menggunakan **GitHub Codespaces** untuk memastikan lingkungan pengembangan yang konsisten dan *reproducible*.
 
 ### 1. Membuka Codespaces
 
@@ -97,73 +124,83 @@ Proyek ini dikembangkan menggunakan **GitHub Codespaces** untuk memastikan lingk
 3. Pilih tab **Codespaces**.
 4. Klik **Create Codespace on main**.
 
-GitHub akan secara otomatis membuat lingkungan pengembangan berbasis cloud.
+GitHub akan secara otomatis membuat lingkungan pengembangan berbasis *cloud*.
 
----
+### 2. Persiapan Keamanan (API Key)
 
-### 2. Menjalankan Environment
+Untuk dapat menarik data dari IQAir, Anda memerlukan API Key. Buat file bernama `.env` di direktori utama (*root*) proyek dan masukkan kunci Anda:
 
-Setelah Codespaces aktif, terminal dapat digunakan untuk menjalankan perintah Python atau melakukan instalasi dependency.
-
-Install dependency proyek dengan:
+```env
+IQAIR_API_KEY=masukkan_api_key_anda_di_sini
 
 ```
+
+### 3. Menjalankan Environment
+
+Setelah Codespaces aktif, *install dependency* proyek dengan:
+
+```bash
 pip install -r requirements.txt
+
 ```
 
 ---
 
-### 3. Menjalankan Notebook
+## Arsitektur & Status Proyek (Alur MLOps)
 
-Untuk melakukan eksplorasi data atau eksperimen model:
+Sistem ini telah terintegrasi dari hulu ke hilir dengan rincian fungsionalitas sebagai berikut:
 
-1. Buka folder **notebooks/**
-2. Jalankan file **.ipynb** menggunakan Jupyter Notebook yang tersedia di Codespaces.
+### 1. Data Ingestion & Preprocessing
+
+* **Pengambilan Data:** Skrip bertugas mengambil data secara *real-time* dari IQAir API dan menyimpannya dalam format mentah `.json` dengan *timestamp* (simulasi periodik).
+```bash
+python tests/test_iqair_api.py 
+
+```
 
 
----
+*(Output data mentah tersimpan di folder `data/raw/`)*
+* **Pembersihan Data:** Membaca file JSON, mengekstrak fitur relevan (AQI, Suhu, Kelembapan), menangani duplikasi/nilai kosong, dan merangkumnya menjadi dataset siap pakai (`data/interim/jakarta_aqi_cleaned.csv`).
 
-# Status Proyek
+### 2. Manajemen Versi Data (DVC)
 
-1. Data Ingestion
-Skrip ini bertugas mengambil data secara real-time dari IQAir API dan menyimpannya dalam format mentah .json dengan timestamp (simulasi periodik).
-`python src/ingest_data.py`
-Output data mentah akan tersimpan di dalam folder data/raw/.
-
-2. Data Preprocessing
-Skrip ini bertugas membaca seluruh file JSON di folder raw, mengekstrak fitur yang relevan (AQI, Suhu, Kelembapan), menangani duplikasi/missing values, dan merangkumnya menjadi dataset siap pakai.
-`python src/preprocess.py`
-Output data bersih akan tersimpan dalam format CSV di data/interim/jakarta_aqi_cleaned.csv.
-
-3. Manajemen Versi Data (DVC)
-Proyek ini menggunakan **DVC (Data Version Control)** untuk melacak perubahan dataset kualitas udara tanpa membebani repositori Git. 
-Penyimpanan file data biner / besar diarahkan ke Remote Storage terpisah, sementara Git hanya menyimpan file penunjuk metadatanya (`.dvc`).
+Proyek menggunakan **DVC (Data Version Control)** untuk melacak perubahan dataset kualitas udara tanpa membebani repositori Git. Penyimpanan file data biner diarahkan ke *Remote Storage* terpisah.
 
 **Alur Penambahan Versi Data Baru (Continual Learning):**
-1. Tarik data terbaru menggunakan `python src/ingest_data.py`.
-2. Proses data menggunakan `python src/preprocess.py`.
-3. Lacak perubahan data dengan DVC: `dvc add data/raw data/interim`.
-4. Simpan metadata ke Git: `git add . && git commit -m "update data"`.
-5. Dorong data fisik ke remote storage: `dvc push`.
-6. Untuk melihat silsilah perubahan, gunakan perintah: `dvc diff`.
 
-Progress LK-7: Model aktif untuk inferensi
+1. Tarik data terbaru menggunakan skrip ingestion.
+2. Lacak perubahan data dengan DVC: `dvc add data/raw data/interim`.
+3. Simpan metadata ke Git: `git add . && git commit -m "update data"`.
+4. Dorong data fisik ke remote storage: `dvc push`.
+5. Untuk melihat silsilah perubahan: `dvc diff`.
 
-Saat ini, versi model yang aktif digunakan pada tahap Production adalah AQI_Jakarta_Model Version 1. Model ini dipilih karena berdasarkan evaluasi MLflow, variasi ini memberikan tingkat error yang setara dengan model yang lebih kompleks. Oleh karena itu, pemilihan didasarkan pada prinsip parsimony (kesederhanaan) untuk mencegah overfitting dan menghemat resource komputasi saat melayani inferensi.
+### 3. Pelatihan Model & Registrasi (CI/CD)
 
-Progress LK-9: Menjalankan Sistem Terintegrasi (Orkestrasi)
+Model **XGBoost Regressor** dilatih untuk memprediksi AQI. Seluruh proses pelatihan dilacak otomatis menggunakan **MLflow** untuk mencatat metrik (MAE, RMSE) dan parameter algoritma.
+Sistem dilengkapi dengan *pipeline* **GitHub Actions (CI/CD)** yang akan mengevaluasi model secara otomatis. Model hanya akan didaftarkan ke *Model Registry* tahap *Production* jika memenuhi kriteria prinsip *parsimony* (kesederhanaan untuk mencegah *overfitting*) dan lolos ambang batas eror maksimal.
 
-Proyek ini menggunakan Docker Compose untuk mengorkestrasi Database, MLflow Server, dan API Inferensi secara bersamaan di dalam satu *bridge network*.
+### 4. Orkestrasi Layanan Terintegrasi (Deployment)
 
-Untuk menjalankan seluruh sistem, cukup gunakan satu perintah berikut di terminal:
+Proyek ini menggunakan **Docker Compose** untuk mengorkestrasi Database (PostgreSQL), MLflow Server, dan API Inferensi Model secara bersamaan di dalam satu *bridge network*. Ini memungkinkan model diakses layaknya layanan *real-time* profesional.
 
-`docker compose up -d`
+Untuk menjalankan seluruh sistem, gunakan perintah:
+
+```bash
+docker compose up -d
+
+```
 
 Lalu, untuk mematikan sistem tanpa menghapus data persistensinya:
 
-`docker compose stop`
+```bash
+docker compose stop
+
+```
 
 ---
 
 ### Nama: Yoshia Benedict Parasian
+
 ### NIM: 235150207111012
+
+### Kelas: MLOps-B
