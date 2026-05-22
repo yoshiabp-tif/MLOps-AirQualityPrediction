@@ -197,6 +197,10 @@ docker compose stop
 
 ```
 
+## Progres LK-10: Model Serving & Horizontal Scaling
+Sistem ini telah ditingkatkan kemampuannya untuk menangani trafik beban tinggi (*high-workload*) menggunakan konsep **Horizontal Scaling** dan **Load Balancing**.
+* **Akses Endpoint API:** API Inferensi di-deploy menggunakan image bawaan `mlflow models build-docker` dan dapat diakses melalui Load Balancer Nginx pada `http://localhost:8080/invocations`. Pengujian dapat dilakukan dengan menjalankan `curl -X POST ...`.
+* **Cara Menambah Jumlah Replika (Scaling):** Skalabilitas diatur melalui Docker Compose. Untuk menambah jumlah instansi API yang berjalan secara dinamis, ubah nilai `replicas: 3` pada layanan `api-service` di dalam file `docker-compose.yaml`, lalu jalankan kembali perintah `docker compose up -d`. Nginx akan secara otomatis mendistribusikan beban trafik ke seluruh replika yang baru.
 ---
 
 ### Nama: Yoshia Benedict Parasian
