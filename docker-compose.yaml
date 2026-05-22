@@ -1,5 +1,5 @@
 services:
-  # Layanan 1: Database Metadata
+  # Layanan 1: Database Metadata (TETAP)
   db:
     image: postgres:15
     container_name: aqi_postgres
@@ -12,13 +12,12 @@ services:
     networks:
       - aqi-network
 
-  # Layanan 2: MLflow Tracking Server
+  # Layanan 2: MLflow Tracking Server (TETAP)
   mlflow-server:
     image: python:3.10-slim
     container_name: aqi_mlflow
-
     command: >
-      bash -c "pip install mlflow==2.10.2 psycopg2-binary &&
+      bash -c "pip install mlflow psycopg2-binary &&
       mlflow server --backend-store-uri postgresql://admin:password123@db:5432/mlflow_db --default-artifact-root mlflow-artifacts:/ --host 0.0.0.0 --port 5000"
     ports:
       - "5000:5000"
@@ -29,26 +28,37 @@ services:
     networks:
       - aqi-network
 
-  # Layanan 3: API Inferensi Model XGBoost
+  # Layanan 3: API Inferensi (DIUBAH UNTUK SCALING)
   api-service:
-    build: .  # Membangun image dari Dockerfile di root direktori
-    container_name: aqi_inference_api
-    ports:
-      - "8080:8080"
+    image: aqi_inference_image # Memakai image yang di-build MLflow tadi
+    # CATATAN: container_name dan ports DIHAPUS agar Docker bisa membuat banyak replika
     environment:
-      # PENTING: Menggunakan "Service Discovery", memanggil nama layanan (mlflow-server), bukan IP
       - MLFLOW_TRACKING_URI=http://mlflow-server:5000
     depends_on:
       - mlflow-server
     networks:
       - aqi-network
+    deploy:
+      mode: replicated
+      replicas: 3 # MENGAKTIFKAN 3 REPLIKA
 
-# Konfigurasi Jaringan (Custom Bridge Network)
+  # Layanan 4: Load Balancer (BARU)
+  load-balancer:
+    image: nginx:latest
+    container_name: aqi_load_balancer
+    ports:
+      - "8080:80" # Mengekspos port 8080 ke laptop kita
+    volumes:
+      - ./nginx.conf:/etc/nginx/nginx.conf:ro
+    depends_on:
+      - api-service
+    networks:
+      - aqi-network
+
 networks:
   aqi-network:
     driver: bridge
 
-# Konfigurasi Persistensi Data (Volume)
 volumes:
   pg-data:
   mlflow-data:
