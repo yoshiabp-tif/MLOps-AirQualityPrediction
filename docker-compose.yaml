@@ -18,7 +18,7 @@ services:
     container_name: aqi_mlflow
     command: >
       bash -c "pip install mlflow psycopg2-binary &&
-      mlflow server --backend-store-uri postgresql://admin:password123@db:5432/mlflow_db --default-artifact-root mlflow-artifacts:/ --host 0.0.0.0 --port 5000"
+      mlflow server --backend-store-uri postgresql://admin:password123@db:5432/mlflow_db --default-artifact-root mlflow-artifacts:/ --host 0.0.0.0 --port 5000 --allowed-hosts '*'"
     ports:
       - "5000:5000"
     depends_on:
@@ -28,10 +28,9 @@ services:
     networks:
       - aqi-network
 
-  # Layanan 3: API Inferensi (DIUBAH UNTUK SCALING)
+  # Layanan 3: API Inferensi Model XGBoost (Scaling)
   api-service:
-    image: aqi_inference_image # Memakai image yang di-build MLflow tadi
-    # CATATAN: container_name dan ports DIHAPUS agar Docker bisa membuat banyak replika
+    build: . # <-- GANTI tulisan "image:" menjadi "build: ."
     environment:
       - MLFLOW_TRACKING_URI=http://mlflow-server:5000
     depends_on:
@@ -40,7 +39,7 @@ services:
       - aqi-network
     deploy:
       mode: replicated
-      replicas: 3 # MENGAKTIFKAN 3 REPLIKA
+      replicas: 3
 
   # Layanan 4: Load Balancer (BARU)
   load-balancer:
@@ -54,6 +53,33 @@ services:
       - api-service
     networks:
       - aqi-network
+
+  # Layanan 5: Prometheus (Pengumpul Metrik)
+  prometheus:
+    image: prom/prometheus:latest
+    container_name: aqi_prometheus
+    ports:
+      - "9090:9090"
+    volumes:
+      - ./prometheus.yml:/etc/prometheus/prometheus.yml
+    networks:
+      - aqi-network
+    depends_on:
+      - load-balancer
+
+  # Layanan 6: Grafana (Dashboard Visualisasi)
+  grafana:
+    image: grafana/grafana:latest
+    container_name: aqi_grafana
+    ports:
+      - "3000:3000"
+    environment:
+      - GF_SECURITY_ADMIN_USER=admin
+      - GF_SECURITY_ADMIN_PASSWORD=admin
+    networks:
+      - aqi-network
+    depends_on:
+      - prometheus
 
 networks:
   aqi-network:

@@ -1,0 +1,8 @@
+global:
+  scrape_interval: 5s # Menyedot data setiap 5 detik
+
+scrape_configs:
+  - job_name: 'aqi_model_monitoring'
+    static_configs:
+      # Mengarah ke Nginx (Load Balancer) agar trafik metrik juga terbagi rata
+      - targets: ['load-balancer:80']

@@ -5,11 +5,21 @@ matplotlib
 mkdocs
 notebook
 numpy
-pandas
 pip
 pytest
 python-dotenv
 ruff
-scikit-learn
 tqdm
 typer
+
+# Library untuk Machine Learning
+mlflow
+xgboost
+pandas
+scikit-learn
+psycopg2-binary
+
+# Library untuk Observability (Tambahan Baru)
+fastapi
+uvicorn
+prometheus-client
