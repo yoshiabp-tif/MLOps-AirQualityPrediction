@@ -43,72 +43,58 @@ Beberapa teknologi inti yang digunakan dalam proyek ini antara lain:
 ## Struktur Direktori Proyek
 
 Proyek ini menggunakan struktur standar **Cookiecutter Data Science** untuk menjaga organisasi kode tetap rapi dan mudah dikembangkan.
-
 ```text
-├── .dvc                   <- Konfigurasi internal Data Version Control (DVC)
+├── .dvc                    <- Konfigurasi internal Data Version Control (DVC)
 │   ├── .gitignore
 │   └── config
-├── .github/workflows      <- Konfigurasi pipeline CI/CD (GitHub Actions)
+├── .github/workflows       <- Konfigurasi pipeline CI/CD (GitHub Actions)
 │   └── mlops-automation.yaml
-├── .vscode                <- Pengaturan environment editor
+├── .vscode                 <- Pengaturan environment editor
 │   └── settings.json
-├── data                   <- Folder utama penyimpanan data
-│   ├── external           <- Data dari sumber pihak ketiga
-│   ├── processed          <- Dataset final siap pakai
+├── data                    <- Folder utama penyimpanan data
+│   ├── external            <- Data dari sumber pihak ketiga
+│   ├── processed           <- Dataset final siap pakai
 │   ├── .gitignore
-│   ├── interim.dvc        <- Tracker DVC untuk data sementara
-│   └── raw.dvc            <- Tracker DVC untuk data mentah
-├── docs                   <- Dokumentasi proyek (MkDocs)
+│   ├── interim.dvc         <- Tracker DVC untuk data sementara
+│   └── raw.dvc             <- Tracker DVC untuk data mentah
+├── docs                    <- Dokumentasi proyek (MkDocs)
 │   ├── docs/getting-started.md
 │   ├── docs/index.md
 │   ├── README.md
 │   └── mkdocs.yml
-├── mlruns/1/models        <- Artefak model & eksperimen yang direkam MLflow
-│   ├── m-2c8a54c.../artifacts
-│   │   ├── MLmodel
-│   │   ├── conda.yaml
-│   │   ├── model.ubj      <- Model tersimpan dalam format Universal Binary JSON
-│   │   ├── python_env.yaml
-│   │   ├── registered_model_meta
-│   │   └── requirements.txt
-│   ├── m-c0878c5.../artifacts
-│   └── m-f9799c9.../artifacts
-├── models                 <- Folder alternatif model machine learning
-├── notebooks              <- Jupyter Notebook untuk eksperimen awal
-│   └── 01_initial_eda.ipynb
-├── references             <- Referensi tambahan / kamus data
-├── reports                <- Laporan analisis & visualisasi
+├── mlruns/1/models         <- Artefak model & eksperimen yang direkam MLflow
+├── models                  <- Folder alternatif model machine learning
+├── notebooks               <- Jupyter Notebook untuk eksperimen awal
+├── prometheus              <- Konfigurasi Observability (Baru)
+│   └── prometheus.yml      <- Konfigurasi scraping metrik
+├── references              <- Referensi tambahan / kamus data
+├── reports                 <- Laporan analisis & visualisasi
 │   └── figures
-├── src                    <- Source code utama proyek
+├── src                     <- Source code utama proyek
 │   ├── modeling
-│   │   ├── __init__.py
-│   │   ├── predict.py     <- Skrip inferensi model
-│   │   └── train.py       <- Skrip pelatihan model
-│   ├── __init__.py
-│   ├── config.py          <- Konfigurasi variabel proyek
-│   ├── dataset.py         <- Skrip pemuatan data
-│   ├── features.py        <- Skrip ekstraksi fitur
-│   ├── ingest_data.py     <- Skrip pengambilan data dari API
-│   ├── plots.py           <- Skrip plotting grafik
-│   └── preprocess.py      <- Skrip pembersihan data
-├── tests                  <- Skrip pengujian otomatis (pytest)
+│   │   ├── predict.py      <- Skrip inferensi model
+│   │   └── train.py        <- Skrip pelatihan model
+│   ├── config.py           <- Konfigurasi variabel proyek
+│   ├── dataset.py          <- Skrip pemuatan data
+│   ├── features.py         <- Skrip ekstraksi fitur
+│   ├── ingest_data.py      <- Skrip pengambilan data dari API
+│   ├── plots.py            <- Skrip plotting grafik
+│   └── preprocess.py       <- Skrip pembersihan data
+├── tests                   <- Skrip pengujian otomatis (pytest)
 │   └── test_data.py
-│
-├── .dvcignore             <- Daftar file yang tidak dilacak oleh DVC
-├── .gitignore             <- Daftar file yang tidak dilacak oleh Git (termasuk .env)
-├── Dockerfile             <- Konfigurasi build image Docker
-├── LICENSE                <- Lisensi proyek (MIT)
-├── Makefile               <- Perintah shortcut otomatis
-├── README.md              <- Dokumentasi utama proyek
-├── docker-compose.yaml    <- File orkestrasi Docker multi-container
-├── mlflow.db              <- Database lokal SQLite untuk Tracking MLflow
-├── model_metadata.yaml.dvc<- Tracker DVC untuk metadata model
-├── pyproject.toml         <- Konfigurasi metadata proyek Python
-├── requirements.txt       <- Daftar dependensi/library Python
-├── test_inference.py      <- Skrip manual pengujian inferensi
-└── test_iqair_api.py      <- Skrip manual pengujian koneksi API IQAir
+├── .dvcignore              <- Daftar file yang tidak dilacak oleh DVC
+├── .gitignore              <- Daftar file yang tidak dilacak oleh Git
+├── Dockerfile              <- Konfigurasi build image Docker
+├── LICENSE                 <- Lisensi proyek (MIT)
+├── Makefile                <- Perintah shortcut otomatis
+├── README.md               <- Dokumentasi utama proyek (Diupdate)
+├── docker-compose.yaml     <- File orkestrasi Docker multi-container (Diupdate)
+├── mlflow.db               <- Database lokal SQLite untuk Tracking MLflow
+├── model_metadata.yaml.dvc <- Tracker DVC untuk metadata model
+├── pyproject.toml          <- Konfigurasi metadata proyek Python
+├── requirements.txt        <- Daftar dependensi/library Python
+└── test_inference.py       <- Skrip manual pengujian inferensi
 ```
-
 Struktur ini membantu memastikan bahwa seluruh proses pengembangan *data science* dapat dilakukan secara **terstruktur, reproducible, dan scalable**.
 
 ---
@@ -202,9 +188,46 @@ Sistem ini telah ditingkatkan kemampuannya untuk menangani trafik beban tinggi (
 * **Akses Endpoint API:** API Inferensi di-deploy menggunakan image bawaan `mlflow models build-docker` dan dapat diakses melalui Load Balancer Nginx pada `http://localhost:8080/invocations`. Pengujian dapat dilakukan dengan menjalankan `curl -X POST ...`.
 * **Cara Menambah Jumlah Replika (Scaling):** Skalabilitas diatur melalui Docker Compose. Untuk menambah jumlah instansi API yang berjalan secara dinamis, ubah nilai `replicas: 3` pada layanan `api-service` di dalam file `docker-compose.yaml`, lalu jalankan kembali perintah `docker compose up -d`. Nginx akan secara otomatis mendistribusikan beban trafik ke seluruh replika yang baru.
 ---
+## Progres LK-11: Implementasi Observability dan Dashboard
+Repositori ini memuat arsitektur *Machine Learning Operations* (MLOps) untuk prediksi Kualitas Udara (AQI) di Jakarta menggunakan model berbasis *Machine Learning*. Proyek ini merupakan bagian dari implementasi infrastruktur Capstone Project Kelompok A.3 (Mitra: Epson) di Fakultas Ilmu Komputer (FILKOM), Universitas Brawijaya.
 
-### Nama: Yoshia Benedict Parasian
+### Arsitektur Microservices
+Sistem ini dibangun menggunakan pendekatan *microservices* berbasis Docker, yang terdiri dari komponen berikut:
+- **API Service (FastAPI / Uvicorn):** Melayani *request* inferensi model secara *real-time*.
+- **Load Balancer (Nginx):** Mengatur distribusi *traffic* dan mengekspos *endpoint* tunggal.
+- **Model Registry (MLflow):** Manajemen versi model prediksi secara dinamis.
+- **Metrics Scraper (Prometheus):** Mengumpulkan metrik operasional dan *Prediction Drift*.
+- **Observability Dashboard (Grafana):** Visualisasi metrik kesehatan sistem secara *real-time*.
 
-### NIM: 235150207111012
+### Endpoint & Port Layanan
+Setelah kontainer berjalan, layanan dapat diakses melalui:
+- **API Inference:** `http://localhost:8080/invocations`
+- **Metrik Prometheus (API):** `http://localhost:8080/metrics`
+- **MLflow UI:** `http://localhost:5000`
+- **Prometheus UI:** `http://localhost:9090`
+- **Grafana Dashboard:** `http://localhost:3000`
 
-### Kelas: MLOps-B
+### Observability & Monitoring (LK-11)
+Sistem ini telah dilengkapi dengan instrumen pemantauan (menggunakan `prometheus_client`) untuk melacak:
+1. **API Throughput (RPS):** Total jumlah *request* yang diproses.
+2. **Inference Latency (P95):** Distribusi waktu respons sistem.
+3. **AQI Prediction Distribution (Data Drift):** Deteksi anomali pada sebaran hasil prediksi untuk mengantisipasi penurunan performa model (*Model Decay*).
+
+### Cara Menjalankan Sistem
+Pastikan Docker dan Docker Compose telah terinstal.
+```bash
+# Menjalankan seluruh layanan di background
+docker compose up -d
+
+# Mengecek status layanan
+docker compose ps
+
+# Mematikan seluruh layanan
+docker compose down
+```
+---
+**Nama: Yoshia Benedict Parasian**
+
+**NIM: 235150207111012**
+
+**Kelas: MLOps-B**
