@@ -17,7 +17,7 @@ services:
     image: python:3.10-slim
     container_name: aqi_mlflow
     command: >
-      bash -c "pip install mlflow psycopg2-binary &&
+      bash -c "pip install mlflow==3.12.0 psycopg2-binary &&
       mlflow server --backend-store-uri postgresql://admin:password123@db:5432/mlflow_db --default-artifact-root mlflow-artifacts:/ --host 0.0.0.0 --port 5000 --allowed-hosts '*'"
     ports:
       - "5000:5000"
@@ -69,18 +69,21 @@ services:
 
   # Layanan 6: Grafana (Dashboard Visualisasi)
   grafana:
-    image: grafana/grafana:latest
-    container_name: aqi_grafana
-    ports:
-      - "3000:3000"
-    environment:
-      - GF_SECURITY_ADMIN_USER=admin
-      - GF_SECURITY_ADMIN_PASSWORD=admin
-    networks:
-      - aqi-network
-    depends_on:
-      - prometheus
-
+      image: grafana/grafana:latest
+      container_name: aqi_grafana
+      ports:
+        - "3000:3000"
+      environment:
+        - GF_SECURITY_ADMIN_USER=admin
+        - GF_SECURITY_ADMIN_PASSWORD=admin
+      # 👇 TAMBAHKAN BARIS VOLUMES INI
+      volumes:
+        - grafana-storage:/var/lib/grafana
+      networks:
+        - aqi-network
+      depends_on:
+        - prometheus
+    
 networks:
   aqi-network:
     driver: bridge
@@ -88,3 +91,4 @@ networks:
 volumes:
   pg-data:
   mlflow-data:
+  grafana-storage:
