@@ -37,7 +37,7 @@ jobs:
     # Menarik dataset terbaru yang telah dilacak oleh DVC
     - name: Fetch Latest Data via DVC
       run: |
-        dvc pull data/processed/
+        dvc pull
       env:
         DVC_STUDIO_TOKEN: ${{ secrets.DVC_STUDIO_TOKEN }} # Jika menggunakan DVC Remote cloud
 
