@@ -31,7 +31,8 @@ jobs:
         pip install -r requirements.txt
 
     - name: Install DVC
-        run: pip install dvc
+      run: |
+        pip install dvc
 
     # Menarik dataset terbaru yang telah dilacak oleh DVC
     - name: Fetch Latest Data via DVC
