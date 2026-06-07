@@ -1,0 +1,34 @@
+{
+    "status": "success",
+    "data": {
+        "city": "Jakarta",
+        "state": "Jakarta",
+        "country": "Indonesia",
+        "location": {
+            "type": "Point",
+            "coordinates": [
+                106.79324,
+                -6.236704
+            ]
+        },
+        "current": {
+            "pollution": {
+                "ts": "2026-03-12T15:00:00.000Z",
+                "aqius": 84,
+                "mainus": "p2",
+                "aqicn": 47,
+                "maincn": "s2"
+            },
+            "weather": {
+                "ts": "2026-03-12T15:00:00.000Z",
+                "ic": "03n",
+                "hu": 79,
+                "pr": 1010,
+                "tp": 29,
+                "wd": 280,
+                "ws": 1.94,
+                "heatIndex": 35
+            }
+        }
+    }
+}

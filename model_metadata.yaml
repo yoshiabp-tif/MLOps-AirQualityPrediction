@@ -1,0 +1,4 @@
+model_name: AQI_Jakarta_Model
+active_version: 1
+stage: Production
+description: "Model XGBoost terbaik (Run_1_Basic) yang dipilih untuk inferensi karena memenuhi prinsip parsimony."
