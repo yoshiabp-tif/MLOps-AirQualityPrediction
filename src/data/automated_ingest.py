@@ -32,13 +32,16 @@ def fetch_and_append_data():
             # 4. Append (gabungkan) ke file CSV lama tanpa menghapus isinya
             if os.path.exists(CSV_PATH):
                 old_df = pd.read_csv(CSV_PATH)
-                # Cegah duplikasi data jika ditarik di jam yang sama
                 if new_record["timestamp"] not in old_df["timestamp"].values:
                     combined_df = pd.concat([old_df, new_df], ignore_index=True)
                     combined_df.to_csv(CSV_PATH, index=False)
                     print(f"✅ Sukses menambah data jam: {new_record['timestamp']}")
             else:
+                # 👇 SISIPKAN KODE SAKTI INI DI SINI 👇
+                os.makedirs(os.path.dirname(CSV_PATH), exist_ok=True)
+                
                 new_df.to_csv(CSV_PATH, index=False)
+                print("✅ Sukses membuat berkas data baru di cloud.")
                 
     except Exception as e:
         print(f"❌ Ingestion Gagal: {e}")
