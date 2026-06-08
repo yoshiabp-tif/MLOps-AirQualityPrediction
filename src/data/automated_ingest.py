@@ -4,7 +4,7 @@ import datetime
 import os
 
 # Konfigurasi API IQAir berdasarkan data akunmu
-API_KEY = "b7494306-68a0-467a-992b-8831c664fc42"
+API_KEY = "b7494306-68a0-467f-992b-8831c664fc42"
 URL = f"http://api.airvisual.com/v2/city?city=Jakarta&state=Jakarta&country=Indonesia&key={API_KEY}"
 CSV_PATH = "data/interim/jakarta_aqi_cleaned.csv"
 
