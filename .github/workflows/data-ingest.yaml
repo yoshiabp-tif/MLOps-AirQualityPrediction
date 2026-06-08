@@ -1,0 +1,32 @@
+name: Hourly Data Ingestion Pipeline
+
+on:
+  schedule:
+    - cron: '0 * * * *' # 🚀 Mantra Sakti: Perintah otomatis berjalan setiap satu jam sekali
+  workflow_dispatch: # Memperbolehkan kamu klik tombol 'Run' manual dari web GitHub
+
+jobs:
+  ingest-job:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout Code
+        uses: actions/checkout@v3
+
+      - name: Setup Python
+        uses: actions/setup-python@v4
+        with:
+          python-version: '3.10'
+
+      - name: Install Dependencies
+        run: pip install requests pandas
+
+      - name: Run Ingestion Script
+        run: python src/data/automated_ingest.py
+
+      - name: Auto Commit and Push New Data
+        run: |
+          git config --global user.name "Yoshia Automation Bot"
+          git config --global user.name "yoshiabp-tif"
+          git add data/interim/jakarta_aqi_cleaned.csv
+          git commit -m "chore: automated hourly air quality data ingestion [skip ci]" || exit 0
+          git push origin main
