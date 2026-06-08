@@ -226,6 +226,24 @@ docker compose ps
 docker compose down
 ```
 ---
+
+## Dokumentasi Ambang Batas Metrik Pemicu Retraining (LK-12)
+
+Repositori ini menerapkan sistem otomatisasi Continuous Training (CT) berbasis Closed-Loop. Berikut adalah panduan ambang batas metrik yang digunakan sebagai pemicu (trigger) jalurnya latihan ulang otomatis:
+
+| Nama Metrik | Instrumen Pemantau | Ambang Batas (Threshold) | Tindakan Operasional |
+| :--- | :--- | :--- | :--- |
+| **Prediction Drift** | Evidently AI / Grafana Heatmap | `p-value < 0.05` (Uji KS) | Memicu repositori dispatch untuk menjalankan `train.py` |
+| **Model Error** | Prometheus / Grafana Metric | `MAE > 50.0` | Mengaktifkan sinyal peringatan kritis sistem gating |
+| **API Load Stabilitas** | Nginx Load Balancer | `Latency P95 > 200ms` | Mengaktifkan algoritma Smart Local Disk Fallback |
+
+### Berkas Konfigurasi Utama:
+1. Pipa CI/CD Otomatis: `.github/workflows/mlops-automation.yaml`
+2. Tameng Ketahanan API: `src/app.py` (Menggunakan teknik `try-except Local File Store Mount`)
+3. Aturan Seleksi Model: `src/modeling/validate.py`
+
+---
+
 **Nama: Yoshia Benedict Parasian**
 
 **NIM: 235150207111012**
