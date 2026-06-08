@@ -51,6 +51,7 @@ jobs:
         MLFLOW_TRACKING_URI: ${{ secrets.MLFLOW_TRACKING_URI }}
         AWS_ACCESS_KEY_ID: ${{ secrets.AWS_ACCESS_KEY_ID }}
         AWS_SECRET_ACCESS_KEY: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
+        MLFLOW_ALLOW_FILE_STORE: "true" # <--- TAMBAHKAN BARIS INI TEPAT DI SINI
       run: |
         echo "Menjalankan skrip pelatihan dan validasi metrik otomatis..."
         python src/modeling/train.py
