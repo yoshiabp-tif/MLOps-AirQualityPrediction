@@ -40,6 +40,8 @@ services:
     deploy:
       mode: replicated
       replicas: 3
+    volumes:
+      - ./mlruns:/app/mlruns  # 🚀 MANTRA SAKTI: Jembatani folder luar ke dalam Docker
 
   # Layanan 4: Load Balancer (BARU)
   load-balancer:

@@ -13,7 +13,26 @@ PREDICTION_DISTRIBUTION = Histogram("model_prediction_aqi", "Distribusi nilai te
 
 # 2. Muat Model Langsung dari MLflow Registry
 model_uri = "models:/AQI_Jakarta_Model/Production"
-model = mlflow.pyfunc.load_model(model_uri)
+try:
+    # 1. Coba jalur normal via Registry Network
+    model = mlflow.pyfunc.load_model(model_uri)
+except Exception as e:
+    print(f"⚠️ MLflow Registry network load failed: {e}")
+    print("🚀 Activating Smart Local Disk Fallback...")
+    import glob
+    import os
+    
+    # Cari semua file konfigurasi MLmodel yang ada di penyimpanan disk lokal
+    mlmodel_files = glob.glob("mlruns/**/MLmodel", recursive=True) + glob.glob("/app/mlruns/**/MLmodel", recursive=True)
+    
+    if mlmodel_files:
+        # Ambil folder model yang paling baru gres dimodifikasi/dibuat hari ini
+        latest_mlmodel = max(mlmodel_files, key=os.path.getmtime)
+        model_dir = os.path.dirname(latest_mlmodel)
+        print(f"📦 Found fresh model on local drive! Loading directly from: {model_dir}")
+        model = mlflow.pyfunc.load_model(model_dir)
+    else:
+        raise RuntimeError("❌ Tragis! Tidak ada file MLmodel apa pun baik di Registry maupun di disk lokal.")
 
 # 3. Ekspos Jalur /metrics untuk Disedot oleh Prometheus
 metrics_app = make_asgi_app()
