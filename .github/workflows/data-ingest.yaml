@@ -5,6 +5,10 @@ on:
     - cron: '0 * * * *' # Perintah otomatis berjalan setiap satu jam sekali
   workflow_dispatch: # Memperbolehkan klik tombol 'Run' manual dari web GitHub
 
+# 👇 KUNCI SAKTI PENYELESAIAN ERROR 403 👇
+permissions:
+  contents: write # Mengizinkan robot melakukan commit dan push balik ke repositori
+
 jobs:
   ingest-job:
     runs-on: ubuntu-latest
