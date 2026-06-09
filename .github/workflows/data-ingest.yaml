@@ -1,9 +1,9 @@
 name: Hourly Data Ingestion Pipeline
 
 on:
-  schedule:
-    - cron: '0 * * * *' # Perintah otomatis berjalan setiap satu jam sekali
-  workflow_dispatch: # Memperbolehkan klik tombol 'Run' manual dari web GitHub
+  repository_dispatch:
+    types: [trigger_hourly_ingest] # Nama event rahasia yang akan ditembak dari luar
+  workflow_dispatch: # Memperbolehkan klik tombol 'Run workflow' manual dari web GitHub
 
 # 👇 KUNCI SAKTI PENYELESAIAN ERROR 403 👇
 permissions:
