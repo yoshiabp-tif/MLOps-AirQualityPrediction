@@ -9,28 +9,29 @@ import numpy as np
 import os
 
 def prepare_data(filepath="data/interim/jakarta_aqi_cleaned.csv"):
-    """Membaca data dan menyiapkan fitur & target untuk time-series"""
-    # [Fallback CI/CD] Jika dijalankan di GitHub Actions yang tidak memiliki data DVC lokal
-    if not os.path.exists(filepath):
-        print("⚠️ Data tidak ditemukan. Membuat data dummy khusus untuk simulasi CI/CD Pipeline...")
-        os.makedirs(os.path.dirname(filepath), exist_ok=True)
-        dummy_df = pd.DataFrame({
-            'timestamp': pd.date_range(start='2026-04-01', periods=100, freq='h'),
-            'aqi_us': np.random.randint(50, 150, 100),
-            'temperature_c': np.random.uniform(25, 35, 100),
-            'humidity_pct': np.random.uniform(50, 90, 100)
-        })
-        dummy_df.to_csv(filepath, index=False)
-        
     df = pd.read_csv(filepath)
     df['timestamp'] = pd.to_datetime(df['timestamp'])
     df = df.sort_values('timestamp')
+    
+    # 🚀 REKAYASA FITUR BARU (FEATURE ENGINEERING)
+    df['hour'] = df['timestamp'].dt.hour
+    df['day_of_week'] = df['timestamp'].dt.dayofweek
+    
+    # Fitur Lag (Riwayat masa lalu)
+    df['aqi_lag_2'] = df['aqi_us'].shift(1) # Nilai jam sebelumnya
+    df['aqi_diff'] = df['aqi_us'].diff()     # Tren kenaikan/penurunan
+    
+    # Target prediksi jam berikutnya
     df['target_aqi_next_hour'] = df['aqi_us'].shift(-1)
+    
+    # Hapus baris kosong akibat proses shifting dan diff
     df = df.dropna() 
 
-    features = ['aqi_us', 'temperature_c', 'humidity_pct']
+    # Daftarkan semua pasukan fitur baru ke dalam model
+    features = ['aqi_us', 'temperature_c', 'humidity_pct', 'hour', 'day_of_week', 'aqi_lag_2', 'aqi_diff']
     X = df[features]
     y = df['target_aqi_next_hour']
+    
     return train_test_split(X, y, test_size=0.2, shuffle=False)
 
 def train_and_evaluate(X_train, X_test, y_train, y_test, params, run_name):
